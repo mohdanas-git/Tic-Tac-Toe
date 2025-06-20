@@ -1,67 +1,162 @@
-*{
+/* Universal Box Sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    background-color: #283618; /* Dark green/brown background */
+    color: #E0E0E0; /* Light text color for contrast */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    overflow: hidden; /* Prevent scrollbar if not needed */
 }
 
-body{
-    background-color: #548687;
-    text-align: center;
+/* Main Heading */
+#game-title {
+    font-size: 3rem; /* Larger title */
+    color: #FEFAE0; /* Light cream for title */
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
 }
-.container{
-    height: 70vh;
+
+/* Game Container */
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 20px; /* Space between game and reset button */
 }
 
-.game{
+/* Game Board */
+.game {
     height: 60vmin;
     width: 60vmin;
+    display: grid; /* Use CSS Grid for perfect alignment */
+    grid-template-columns: repeat(3, 1fr); /* 3 columns, equal width */
+    grid-template-rows: repeat(3, 1fr); /* 3 rows, equal height */
+    gap: 1.5vmin; /* Consistent gap */
+    background-color: #606C38; /* Muted olive green for game board background */
+    border-radius: 1rem;
+    box-shadow: 0 0 2rem rgba(0, 0, 0, 0.4); /* Stronger, more attractive shadow */
+    padding: 1.5vmin; /* Padding inside the game board */
+}
+
+/* Individual Game Boxes */
+.box {
+    height: 100%; /* Take full height of grid cell */
+    width: 100%; /* Take full width of grid cell */
+    border-radius: 0.8rem; /* Slightly smaller radius for boxes */
+    border: none;
+    background-color: #FEFAE0; /* Light cream for box background */
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2); /* Softer shadow for boxes */
+    font-size: 8vmin;
+    font-weight: bold;
+    color: #333; /* Default color for empty boxes if needed, otherwise will be set by JS */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-out; /* Smooth hover effect */
+}
+
+/* Hover effect for boxes */
+.box:not(:disabled):hover { /* Apply only to clickable boxes */
+    background-color: #EAE0D0; /* Slightly darker cream on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Style for Player X */
+.box.playerX {
+    color: #DDA15E; /* Warm orange/brown */
+}
+
+/* Style for Player O */
+.box.playerO {
+    color: #BC6C25; /* Darker orange/brown */
+}
+
+/* Buttons */
+#reset-btn,
+#new-btn {
+    padding: 12px 25px; /* More padding */
+    font-size: 1.1rem; /* Slightly larger font */
+    background-color: #A7B38E; /* Desaturated green for buttons */
+    color: #283618; /* Dark text on buttons */
+    border-radius: 0.7rem; /* Consistent border-radius */
+    border: none;
+    cursor: pointer;
+    margin-top: 20px; /* Space from game board */
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2); /* Subtle button shadow */
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+    font-weight: 600; /* Bolder text */
+}
+
+#reset-btn:hover,
+#new-btn:hover {
+    background-color: #8C9970; /* Darker green on hover */
+    transform: translateY(-2px);
+}
+
+#reset-btn:active,
+#new-btn:active {
+    transform: translateY(0); /* Press effect */
+    box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.3) inset; /* Inset shadow for pressed effect */
+}
+
+
+/* Message Container */
+.msg-container {
+    height: auto; /* Allow height to adjust to content */
+    position: absolute; /* Position over the game */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1.5vh;
+    background-color: rgba(40, 54, 24, 0.9); /* Semi-transparent overlay matching background */
+    backdrop-filter: blur(5px); /* Frosty glass effect */
+    z-index: 100; /* Ensure it's on top */
+    opacity: 1; /* Default to visible for transition */
+    transition: opacity 0.4s ease-in-out;
 }
 
-.box{
-    height: 18vmin;
-    width: 18vmin;
-    border-radius: 1rem;
-    border: none;
-    box-shadow: 0 0 1rem rgbs(0,0,0,0.1);
-    font-size: 8vmin;
-    color: #b0413E;
-    background-color: #ffffc7;
+.msg-container.hide {
+    opacity: 0;
+    pointer-events: none; /* Make it unclickable when hidden */
+    visibility: hidden; /* Hide from screen readers when hidden */
 }
 
-#reset-btn{
-    padding: 10px;
-    font-size: 1rem;
-    background-color: #191913;
-    color: #fff;
-    border-radius: 1rem;
-    border: none;
+
+#msg {
+    color: #DDA15E; /* Highlight winning message */
+    font-size: 10vmin; /* Larger font for winning message */
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Stronger shadow for winner text */
 }
 
-#new-btn{
-    padding: 10px;
-    font-size: 1rem;
-    background-color: #191913;
-    color: #fff;
-    border-radius: 1rem;
-    border: none;
-}
-
-#msg{
-    color: #ffffc7;
-    font-size: 8vmin;
-}
-
-.msg-container{
-    height: 30vmin;
-}
-
-.hide{
-    display: none;
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+    #game-title {
+        font-size: 2.5rem;
+    }
+    .game {
+        height: 70vmin;
+        width: 70vmin;
+    }
+    .box {
+        font-size: 10vmin;
+    }
+    #msg {
+        font-size: 12vmin;
+    }
 }
